@@ -1,8 +1,10 @@
 using UnityEngine;
+using TMPro;
 
 public class BirdController : MonoBehaviour
 {
   public float speed = 0.5f;
+  public TMP_text scoreText;
   private Vector2 initPosition;
   void Start()
   {
@@ -67,11 +69,31 @@ public class BirdController : MonoBehaviour
     if (collision.gameObject.tag == "Obstacle")
     {
       // Destroy(gameObject);
-      // plays scream audio when bird dies
-      gameObject.GetComponent<AudioSource>().Play();
+
 
       // bird dies; is sent back to initPosition to restart
-      gameObject.transform.position = initPosition;
+      // gameObject.transform.position = initPosition;
+
+      // on collision, subtract 25 points
+      int score = int.Parse(scoreText.text);
+      score = score - 25;
+      scoreText.text = score.ToString();
+
+      if (score <= 0)
+      {
+        Die();
+      }
     }
+  }
+
+  private void Die()
+  {
+    // plays scream audio when bird dies
+    gameObject.GetComponent<AudioSource>().Play();
+
+    //flip bird upside down 
+    gameObject.GetComponent<SpriteRenderer>().flipY = true;
+
+    gameObject.GetComponent<RigidBody2D>().gravityScale = 1;
   }
 }
